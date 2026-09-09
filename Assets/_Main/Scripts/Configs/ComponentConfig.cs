@@ -89,5 +89,11 @@ namespace Configs
             $"{nameof(Collision)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
             $"{Tools.EntityComponentListValueParser.GetString(value)}";
+
+        public static string OnGrid() =>
+            $"{nameof(EntityComponentEmpty)}" +
+            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
+            $"{nameof(OnGrid)}" +
+            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}";
     }
 }

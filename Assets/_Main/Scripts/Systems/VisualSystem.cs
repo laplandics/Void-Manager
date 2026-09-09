@@ -42,7 +42,7 @@ namespace EntitySystems
         }
 
         private void OnNewSpriteNameSet(Entity entity, string spriteName) =>
-            _renderersMap[entity.id].sprite = R.LoadSprite(spriteName);
+            _renderersMap[entity.id].sprite = R.SpritesLoader.LoadSprite(spriteName);
         
 
         private void OnVisibilityChanged(Entity entity, bool visible) =>

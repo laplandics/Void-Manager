@@ -99,6 +99,10 @@ namespace EntitySystems
             
             yield return null;
             entity.RemoveComponent(nameof(FollowCursor));
+            
+            yield return null;
+            entity.AddComponent(OnGrid());
+            
             entity.Actions.AddWorldUI(nameof(EntityWorldUIOnBuildProgressBar));
             
             const int maxStageProgress = Values.ENTITY_BUILD_STAGE_1_PROGRESS_MAX;

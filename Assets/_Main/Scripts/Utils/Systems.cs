@@ -13,13 +13,13 @@ namespace Utils
         
         public void Initialize()
         {
-            AddSystemRegistration(new HealthSystem());
             AddSystemRegistration(new VisualSystem());
             AddSystemRegistration(new OnBuildSystem());
             AddSystemRegistration(new PositionSystem());
             AddSystemRegistration(new FollowCursorSystem());
             AddSystemRegistration(new EntityUISystem());
             AddSystemRegistration(new CollisionSystem());
+            AddSystemRegistration(new OnGridSystem());
         }
 
         private void AddSystemRegistration(EntitySystem system)

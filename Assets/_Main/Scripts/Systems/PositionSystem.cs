@@ -21,10 +21,7 @@ namespace EntitySystems
         }
 
         private static void SetPosition(Entity entity, Vector3 value)
-        {
-            
-            entity.entityObject.transform.position = value;
-        }
+        { entity.entityObject.transform.position = value; }
 
         public override void UnregisterEntity(Entity entity)
         {
