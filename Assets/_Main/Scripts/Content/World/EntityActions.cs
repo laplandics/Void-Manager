@@ -16,11 +16,11 @@ namespace Helpers
         public void SetPosition(Vector3 position)
         { if (!TryGet<EntityComponentVector3>(nameof(Position), out var pos)) return; pos.stream.Value = position; }
 
-        public void SetColor(Color color)
-        { if (!TryGet<EntityComponentColor>(nameof(ColorTint), out var col)) return; col.stream.Value = color; }
-
-        public void SetRenderOrder(int renderOrder)
-        { if (!TryGet<EntityComponentInt>(nameof(RenderOrder), out var rend)) return; rend.stream.Value = renderOrder; }
+        public void SetRotation(Vector3 angles)
+        { if (!TryGet<EntityComponentVector3>(nameof(Rotation), out var rot)) return; rot.stream.Value = angles; }
+        
+        public Vector3 GetPosition()
+        { return !TryGet<EntityComponentVector3>(nameof(Position), out var pos) ? Vector3.zero : pos.stream.Value; }
 
         public void SetBuildingProgress(float progress)
         { if (!TryGet<EntityComponentFloat>(nameof(OnBuild), out var build)) return; build.stream.Value = progress; }
@@ -31,18 +31,19 @@ namespace Helpers
         public float GetBuildingProgress()
         { return !TryGet<EntityComponentFloat>(nameof(OnBuild), out var build) ? 0f : build.stream.Value; }
 
-        public bool GetCollisions(out IReadOnlyList<string> collisions)
-        {
-            collisions = new List<string>();
-            if (!TryGet<EntityComponentStringList>(nameof(Collision), out var coll)) return false;
-            collisions = coll.stream.Value;
-            return true;
-        }
-
-        public void SetVisibility(bool visibility)
-        { if (!TryGet<EntityComponentBool>(nameof(Visibility), out var vis)) return; vis.stream.Value = visibility; }
-
+        public void SetSprite(string spriteName)
+        { if (!TryGet<EntityComponentString>(nameof(Sprite), out var spr)) return; spr.stream.Value = spriteName; }
+        
         public void AddWorldUI(string uiElementName)
         { if (!TryGet<EntityComponentStringList>(nameof(EntityUI), out var ui)) return; ui.stream.AddUnique(uiElementName); }
+
+        public void RemoveWorldUI(string uiElementName)
+        { if (!TryGet<EntityComponentStringList>(nameof(EntityUI), out var ui)) return; ui.stream.Remove(uiElementName); }
+        
+        public void SetColor(Color color)
+        { if (!TryGet<EntityComponentColor>(nameof(ColorTint), out var col)) return; col.stream.Value = color; }
+
+        public Color GetColor()
+        { return !TryGet<EntityComponentColor>(nameof(ColorTint), out var col) ? Color.violetRed : col.stream.Value; }
     }
 }

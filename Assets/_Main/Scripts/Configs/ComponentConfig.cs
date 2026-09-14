@@ -7,20 +7,6 @@ namespace Configs
 {
     public static class ComponentConfig
     {
-        public static string MaxHp(float value) =>
-            $"{nameof(EntityComponentFloat)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{nameof(MaxHp)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{value}";
-        
-        public static string CurrentHp(float value) =>
-            $"{nameof(EntityComponentFloat)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{nameof(CurrentHp)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{value}";
-        
         public static string Sprite(string value) =>
             $"{nameof(EntityComponentString)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
@@ -33,7 +19,7 @@ namespace Configs
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
             $"{nameof(ColorTint)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{Tools.EntityComponentColorValueParser.GetString(value)}";
+            $"{Converters.EntityComponentColorValueParser.GetString(value)}";
 
         public static string RenderOrder(int value) =>
             $"{nameof(EntityComponentInt)}" +
@@ -42,14 +28,7 @@ namespace Configs
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
             $"{value}";
         
-        public static string Visibility(bool value) =>
-            $"{nameof(EntityComponentBool)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{nameof(Visibility)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{value}";
-        
-        public static string OnBuild(int value) =>
+        public static string OnBuild(int value = 0) =>
             $"{nameof(EntityComponentFloat)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
             $"{nameof(OnBuild)}" +
@@ -61,39 +40,39 @@ namespace Configs
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
             $"{nameof(CachedComponents)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{Tools.EntityComponentListValueParser.GetString(value)}";
+            $"{Converters.EntityComponentListValueParser.GetString(value)}";
         
         public static string Position(Vector3 value) =>
             $"{nameof(EntityComponentVector3)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
             $"{nameof(Position)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{Tools.EntityComponentVectorValueParser.GetString(value)}";
+            $"{Converters.EntityComponentVectorValueParser.GetString(value)}";
         
-        public static string FollowCursor() =>
-            $"{nameof(EntityComponentEmpty)}" +
+        public static string Rotation(Vector3 value) =>
+            $"{nameof(EntityComponentVector3)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{nameof(FollowCursor)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}";
+            $"{nameof(Rotation)}" +
+            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
+            $"{Converters.EntityComponentVectorValueParser.GetString(value)}";
         
         public static string EntityUI(List<string> value) =>
             $"{nameof(EntityComponentStringList)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
             $"{nameof(EntityUI)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{Tools.EntityComponentListValueParser.GetString(value)}";
+            $"{Converters.EntityComponentListValueParser.GetString(value)}";
         
-        public static string Collision(List<string> value) =>
-            $"{nameof(EntityComponentStringList)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{nameof(Collision)}" +
-            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{Tools.EntityComponentListValueParser.GetString(value)}";
-
-        public static string OnGrid() =>
+        public static string InputMovement() =>
             $"{nameof(EntityComponentEmpty)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-            $"{nameof(OnGrid)}" +
+            $"{nameof(InputMovement)}" +
+            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}";
+        
+        public static string CameraFollow() =>
+            $"{nameof(EntityComponentEmpty)}" +
+            $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
+            $"{nameof(CameraFollow)}" +
             $"{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}";
     }
 }

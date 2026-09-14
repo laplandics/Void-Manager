@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Content.WorldSpace;
-using Helpers;
 using UnityEngine;
 using Utils;
 using static Configs.ComponentConfig;
@@ -20,10 +19,8 @@ namespace EntitySystems
             RegistrationsMap[id] = new List<IDisposable>();
             
             var entityWorldUIInfo = new WorldUIInfo(
-                "EntityUI",
-                Guid.NewGuid().ToString(),
-                R.EntityWorldUIRootAsset,
-                entity.entityObject.transform);
+                "EntityUI", Guid.NewGuid().ToString(), R.EntityWorldUIRootAsset,
+                entity.entityObject.transform, entity, parameters: null);
             
             RegistrationsMap[id].Add(entityWorldUIInfo.IsReady.SubscribeSilently((_, _)
                 => OnEntityUIReady(entity, entityWorldUIInfo)));
@@ -35,7 +32,7 @@ namespace EntitySystems
         private void OnEntityUIReady(Entity entity, WorldUIInfo uiInfo)
         {
             if (!uiInfo.IsReady.Value) return;
-            uiInfo.Renderer.worldSpaceSize = new Vector2(320f, 320f);
+            uiInfo.Renderer.worldSpaceSize = new Vector2(256f, 256f);
             
             var uiComponent = entity.GetComponent<EntityComponentStringList>(nameof(EntityUI));
 
@@ -49,18 +46,15 @@ namespace EntitySystems
 
         private void OnEntityUIAdd(WorldUIInfo uiInfo, string uiElementName)
         {
-            var instance = Tools.EntityWorldUITypesRegistry.CreateInstance(uiElementName, uiInfo);
-            
-            instance.Add(out var uiElementId);
-            uiInfo.AttachedElementsNamesIdsMap[uiElementName] = uiElementId;
+            var id = G.Resolve<UI>().Add(uiElementName, uiInfo);
+            uiInfo.AttachedElementsNamesIdsMap.Add(uiElementName, id);
         }
 
         private void OnEntityUIRemove(WorldUIInfo uiInfo, string uiElementName)
         {
             if (!uiInfo.AttachedElementsNamesIdsMap.TryGetValue(uiElementName, out var uiElementId)) return;
-            if (!G.Resolve<UI>().TryGetUIElement(uiElementId, out var uiElement)) return;
             
-            uiElement.Remove();
+            G.Resolve<UI>().Remove(uiElementId);
             uiInfo.AttachedElementsNamesIdsMap.Remove(uiElementName);
         }
         

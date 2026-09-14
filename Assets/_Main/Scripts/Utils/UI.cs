@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Content.UISpace;
-using Helpers;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
@@ -50,7 +49,8 @@ namespace Utils
             info.Holder.uiRenderer = renderer;
             
             renderer.panelSettings = R.WorldUISettingsAsset;
-            renderer.visualTreeAsset = info.Asset;
+            renderer.visualTreeAsset = info.RootAsset;
+            renderer.sortingOrder = 100;
             
             renderer.UnregisterUIReloadCallback(OnWorldUIReload);
             renderer.RegisterUIReloadCallback(OnWorldUIReload);
@@ -59,7 +59,12 @@ namespace Utils
         }
 
         public void RemoveWorldUI(WorldUIInfo info) => _worldUIMap.Remove(info.ID);
-        
+
+        public string Add(string assetName, UIInfo info) => new UIElement(assetName, info).Add();
+
+        public void Remove(string id)
+        { if (!_uiElementsMap.TryGetValue(id, out var uiElement)) return; uiElement.Remove(); }
+
         public VisualElement GetRoot() => _root;
 
         public bool TryGetUIElement(string id, out UIElement uiElement) => _uiElementsMap.TryGetValue(id, out uiElement);

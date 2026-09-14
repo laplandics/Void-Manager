@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Constants;
+using Converters;
 using Data;
 using Helpers;
-using Tools;
 using UnityEngine;
 using Utils;
 using Object = UnityEngine.Object;
@@ -23,9 +23,10 @@ namespace Content.WorldSpace
         
         public EntityActions Actions { get; private set; }
         
-        public void OnNew(EntityData data, int index)
+        public void OnNew(EntityData data, Transform parent)
         {
-            entityObject = new GameObject($"{data.type} {index + 1}").AddComponent<EntityObject>();
+            entityObject = new GameObject(data.type).AddComponent<EntityObject>();
+            if (parent != null) entityObject.transform.SetParent(parent);
             entityObject.entity = this;
             
             id = data.id;
@@ -77,13 +78,28 @@ namespace Content.WorldSpace
             G.Resolve<Systems>().Update(id);
         }
         
-        public List<string> ClearComponents(params string[] excludeTags)
+        public List<string> ClearComponents(params string[] componentsToClear)
         {
-            excludeTags ??= Array.Empty<string>();
+            if (componentsToClear is not { Length: > 0 }) return null;
+            
             var entries = new List<string>();
             for (var i = components.Count - 1; i >= 0; i--)
             {
-                if (excludeTags.Contains(components[i].tag)) continue;
+                if (!componentsToClear.Contains(components[i].tag)) continue;
+                var entry = EntityComponentDataConverter.ToEntry(components[i]);
+                entries.Add(entry);
+                RemoveComponent(components[i].tag, silent: true);
+            }
+            
+            G.Resolve<Systems>().Update(id);
+            return entries;
+        }
+        
+        public List<string> ClearAllComponents()
+        {
+            var entries = new List<string>();
+            for (var i = components.Count - 1; i >= 0; i--)
+            {
                 var entry = EntityComponentDataConverter.ToEntry(components[i]);
                 entries.Add(entry);
                 RemoveComponent(components[i].tag, silent: true);
@@ -110,7 +126,7 @@ namespace Content.WorldSpace
             var data = new EntityData();
             data.id = id;
             data.type = type;
-            data.components = ClearComponents().ToArray();
+            data.components = ClearAllComponents().ToArray();
             
             Object.Destroy(entityObject.gameObject);
             return data;

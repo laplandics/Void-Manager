@@ -60,14 +60,14 @@ public class ReactiveList<T>
     
     public IDisposable OnAdd(Action<T> action)
     {
-        var sub = new Subscriber<T>(action, UnsubscribeFromAdd);
+        var sub = new Subscriber<T>(action, UnsubscribeFromAdd, notifyAlways: false);
         _toSubscribeOnAdd.Add(sub);
         return sub;
     }
 
     public IDisposable OnRemove(Action<T> action)
     {
-        var sub = new Subscriber<T>(action, UnsubscribeFromRemove);
+        var sub = new Subscriber<T>(action, UnsubscribeFromRemove, notifyAlways: false);
         _toSubscribeOnRemove.Add(sub);
         return sub;
     }

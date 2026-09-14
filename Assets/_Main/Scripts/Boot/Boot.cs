@@ -14,10 +14,14 @@ namespace Boot
         private Boot()
         {
             G.Register(new UI());
+            G.Register(new Cells());
             G.Register(new Scenes());
+            G.Register(new Inputs());
+            G.Register(new States());
             G.Register(new Systems());
             G.Register(new Entities());
             G.Register(new Coroutines());
+            G.Register(new GameCamera());
             G.Register(new DataProvider());
             
             //DEBUG ONLY
@@ -49,7 +53,9 @@ namespace Boot
                 Application.targetFrameRate = data.fps;
             }
             
-            G.Resolve<Systems>().Initialize();
+            G.Resolve<Inputs>().Activate();
+            G.Resolve<States>().Activate();
+            G.Resolve<Systems>().Activate();
             yield return null;
             
             G.Resolve<Coroutines>().Start(LoadGame());
@@ -59,7 +65,7 @@ namespace Boot
         {
             yield return G.Resolve<Scenes>().ToScene("Game");
             yield return G.Resolve<UI>().SetUI();
-            
+
             var game = new GameBoot();
             yield return game.LaunchGame();
 

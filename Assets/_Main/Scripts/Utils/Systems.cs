@@ -11,15 +11,15 @@ namespace Utils
         private readonly List<SystemRegistration> _systemRegistrations = new();
         private readonly Dictionary<Type, EntitySystem> _systemsMap = new();
         
-        public void Initialize()
+        public void Activate()
         {
             AddSystemRegistration(new VisualSystem());
             AddSystemRegistration(new OnBuildSystem());
             AddSystemRegistration(new PositionSystem());
-            AddSystemRegistration(new FollowCursorSystem());
+            AddSystemRegistration(new RotationSystem());
             AddSystemRegistration(new EntityUISystem());
-            AddSystemRegistration(new CollisionSystem());
-            AddSystemRegistration(new OnGridSystem());
+            AddSystemRegistration(new InputMovementSystem());
+            AddSystemRegistration(new CameraFollowSystem());
         }
 
         private void AddSystemRegistration(EntitySystem system)

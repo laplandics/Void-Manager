@@ -3,7 +3,7 @@
 namespace Data
 {
     [Serializable]
-    public class EntityData
+    public struct EntityData
     {
         public string id;
         public string type;

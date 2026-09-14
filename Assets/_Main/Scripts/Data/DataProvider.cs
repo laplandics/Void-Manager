@@ -30,13 +30,6 @@ namespace Data
             yield return new WaitUntil(() => task.IsCompleted);
         }
 
-        private static GameData CreateData()
-        {
-            var data = new GameData();
-            data.vSync = Configs.GameConfig.VSYNC;
-            data.fps = Configs.GameConfig.FPS;
-            
-            return data;
-        }
+        private static GameData CreateData() => Tools.InitialDataCreator.CreateGameData();
     }
 }
