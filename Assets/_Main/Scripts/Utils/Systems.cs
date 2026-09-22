@@ -14,7 +14,6 @@ namespace Utils
         public void Activate()
         {
             AddSystemRegistration(new VisualSystem());
-            AddSystemRegistration(new OnBuildSystem());
             AddSystemRegistration(new PositionSystem());
             AddSystemRegistration(new RotationSystem());
             AddSystemRegistration(new EntityUISystem());

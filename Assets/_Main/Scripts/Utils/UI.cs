@@ -63,7 +63,11 @@ namespace Utils
         public string Add(string assetName, UIInfo info) => new UIElement(assetName, info).Add();
 
         public void Remove(string id)
-        { if (!_uiElementsMap.TryGetValue(id, out var uiElement)) return; uiElement.Remove(); }
+        {
+            if (id == null) return;
+            if (!_uiElementsMap.TryGetValue(id, out var uiElement)) return;
+            uiElement.Remove();
+        }
 
         public VisualElement GetRoot() => _root;
 

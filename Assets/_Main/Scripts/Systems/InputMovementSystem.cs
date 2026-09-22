@@ -102,8 +102,6 @@ namespace EntitySystems
             var id = entity.id;
             RegisteredEntities.Remove(id);
             _controlledEntity = null;
-            RegistrationsMap[id].ForEach(r => r.Dispose());
-            RegistrationsMap.Remove(id);
         }
     }
 }

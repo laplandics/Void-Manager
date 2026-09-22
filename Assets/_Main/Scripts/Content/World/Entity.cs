@@ -40,25 +40,25 @@ namespace Content.WorldSpace
             G.Resolve<Systems>().Update(id);
         }
         
-        public void AddComponent(string componentEntry, bool silent = false)
+        public void AddComponent(ComponentData componentData, bool silent = false)
         {
-            var componentTag = componentEntry.Split(Separators.ENTITY_COMPONENT_DATA_SEPARATOR)[1];
+            var componentTag = componentData.tag;
             var sameComponent = components.FirstOrDefault(c => c.tag == componentTag);
             if (sameComponent != null) return;
             
-            components.Add(EntityComponentDataConverter.FromEntry(componentEntry));
+            components.Add(EntityComponentDataConverter.FromData(componentData));
 
             if (silent) return;
             G.Resolve<Systems>().Update(id);
         }
         
-        public T AddComponent<T>(string componentEntry, bool silent = false) where T : EntityComponent
+        public T AddComponent<T>(ComponentData componentData, bool silent = false) where T : EntityComponent
         {
-            var componentTag = componentEntry.Split(Separators.ENTITY_COMPONENT_DATA_SEPARATOR)[1];
+            var componentTag = componentData.tag;
             var sameComponent = components.FirstOrDefault(c => c.tag == componentTag);
             if (sameComponent != null) return null;
 
-            var component = EntityComponentDataConverter.FromEntry(componentEntry);
+            var component = EntityComponentDataConverter.FromData(componentData);
             components.Add(component);
 
             if (silent) return (T)component;
@@ -78,15 +78,15 @@ namespace Content.WorldSpace
             G.Resolve<Systems>().Update(id);
         }
         
-        public List<string> ClearComponents(params string[] componentsToClear)
+        public List<ComponentData> ClearComponents(params string[] componentsToClear)
         {
             if (componentsToClear is not { Length: > 0 }) return null;
             
-            var entries = new List<string>();
+            var entries = new List<ComponentData>();
             for (var i = components.Count - 1; i >= 0; i--)
             {
                 if (!componentsToClear.Contains(components[i].tag)) continue;
-                var entry = EntityComponentDataConverter.ToEntry(components[i]);
+                var entry = EntityComponentDataConverter.ToData(components[i]);
                 entries.Add(entry);
                 RemoveComponent(components[i].tag, silent: true);
             }
@@ -95,12 +95,12 @@ namespace Content.WorldSpace
             return entries;
         }
         
-        public List<string> ClearAllComponents()
+        public List<ComponentData> ClearAllComponents()
         {
-            var entries = new List<string>();
+            var entries = new List<ComponentData>();
             for (var i = components.Count - 1; i >= 0; i--)
             {
-                var entry = EntityComponentDataConverter.ToEntry(components[i]);
+                var entry = EntityComponentDataConverter.ToData(components[i]);
                 entries.Add(entry);
                 RemoveComponent(components[i].tag, silent: true);
             }
@@ -120,13 +120,15 @@ namespace Content.WorldSpace
             
             return null;
         }
+
+        public bool HasComponent(string componentTag) => components.Any(component => component.tag == componentTag);
         
         public EntityData OnDelete()
         {
             var data = new EntityData();
             data.id = id;
             data.type = type;
-            data.components = ClearAllComponents().ToArray();
+            data.components = ClearAllComponents();
             
             Object.Destroy(entityObject.gameObject);
             return data;

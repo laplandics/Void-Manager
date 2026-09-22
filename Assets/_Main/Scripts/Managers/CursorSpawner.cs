@@ -1,7 +1,7 @@
 ﻿using Data;
 using Utils;
 
-namespace Generators
+namespace Managers
 {
     public class CursorSpawner
     {
@@ -16,7 +16,7 @@ namespace Generators
                 _cursorData = entityData;
             }
         }
-
+        
         public void Launch()
         {
             var cursor = G.Resolve<Entities>().New(_cursorData);

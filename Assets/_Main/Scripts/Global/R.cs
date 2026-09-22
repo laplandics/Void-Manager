@@ -36,7 +36,7 @@ public static class R
         private static void CacheUIAssets()
         {
             _uiAssetsCache = new Dictionary<string, VisualTreeAsset>();
-            var assets = Resources.LoadAll<VisualTreeAsset>("UI");
+            var assets = Resources.LoadAll<VisualTreeAsset>("UI/Assets");
             foreach (var asset in assets)
             { _uiAssetsCache.Add(asset.name, asset); }
         }

@@ -22,15 +22,6 @@ namespace Helpers
         public Vector3 GetPosition()
         { return !TryGet<EntityComponentVector3>(nameof(Position), out var pos) ? Vector3.zero : pos.stream.Value; }
 
-        public void SetBuildingProgress(float progress)
-        { if (!TryGet<EntityComponentFloat>(nameof(OnBuild), out var build)) return; build.stream.Value = progress; }
-        
-        public void AddBuildingProgress(float progress)
-        { if (!TryGet<EntityComponentFloat>(nameof(OnBuild), out var build)) return; build.stream.Value += progress; }
-
-        public float GetBuildingProgress()
-        { return !TryGet<EntityComponentFloat>(nameof(OnBuild), out var build) ? 0f : build.stream.Value; }
-
         public void SetSprite(string spriteName)
         { if (!TryGet<EntityComponentString>(nameof(Sprite), out var spr)) return; spr.stream.Value = spriteName; }
         

@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem;
 
 public enum KeyboardKeys { Q, W, E, R, T, Y, U, I, O, P, A, S, D, F, G,
-    H, J, K, L, Z, X, C, V, B, N, M, Esc, Enter }
+    H, J, K, L, Z, X, C, V, B, N, M, Esc, Enter, Backspace }
     
 public enum ActionsMaps { Player, UI }
 
@@ -15,6 +15,9 @@ namespace Utils
         public InputAction PlayerMoveLeft { get; private set; }
         public InputAction PlayerMoveRight { get; private set; }
 
+        public InputAction PlayerTab { get; private set; }
+        public InputAction UITab { get; private set; }
+        
         public InputAction UISelectUp { get; private set; }
         public InputAction UISelectDown { get; private set; }
         public InputAction UISelectRight { get; private set; }
@@ -31,6 +34,9 @@ namespace Utils
             PlayerMoveLeft = Actions.Player.MoveLeft;
             PlayerMoveRight = Actions.Player.MoveRight;
 
+            PlayerTab = Actions.Player.Tab;
+            UITab = Actions.UI.Tab;
+            
             UISelectUp = Actions.UI.SelectUp;
             UISelectDown = Actions.UI.SelectDown;
             UISelectLeft = Actions.UI.SelectLeft;
@@ -86,6 +92,7 @@ namespace Utils
 
                 if (keyBoard.escapeKey.wasPressedThisFrame) PressedKey.Value = KeyboardKeys.Esc;
                 if (keyBoard.enterKey.wasPressedThisFrame) PressedKey.Value = KeyboardKeys.Enter;
+                if (keyBoard.backspaceKey.wasPressedThisFrame) PressedKey.Value = KeyboardKeys.Backspace;
                 
                 yield return null;
             }

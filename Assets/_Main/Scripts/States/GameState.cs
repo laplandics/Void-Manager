@@ -1,6 +1,4 @@
-﻿using Constants;
-
-namespace GameStates
+﻿namespace GameStates
 {
     public abstract class GameState
     {

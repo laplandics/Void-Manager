@@ -27,7 +27,5 @@ namespace Utils
             if (parameters != null) _currentState.SetParameters(parameters);
             _currentState.OnEnter();
         }
-
-        public T GetState<T>() where T : GameState => _currentState is not T stateToSend ? null : stateToSend;
     }
 }

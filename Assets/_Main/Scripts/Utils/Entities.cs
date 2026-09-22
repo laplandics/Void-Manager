@@ -16,16 +16,20 @@ namespace Utils
             _entitiesMap[data.id] = entity;
             entity.OnNew(data, parent);
 
-            var position = entity.entityObject.transform.position;
-            G.Resolve<Cells>().OnEntitySpawned(position, entity);
+            var position = entity.entityObject.transform.localPosition;
+            var cell = G.Resolve<TileMap>().GetCell(position);
+            cell.AddEntity(entity);
+            
             return entity;
         }
 
         public EntityData Delete(string id)
         {
             if (!_entitiesMap.TryGetValue(id, out var entity)) return default;
-            var position = entity.entityObject.transform.position;
-            G.Resolve<Cells>().OnEntityDespawned(position, entity);
+            
+            var position = entity.entityObject.transform.localPosition;
+
+            G.Resolve<TileMap>().GetCell(position).RemoveEntity(entity);
             
             var data = entity.OnDelete();
             _entitiesMap.Remove(id);

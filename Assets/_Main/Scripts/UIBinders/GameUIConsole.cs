@@ -3,22 +3,20 @@ using Utils;
 
 namespace UIBinders
 {
-    [UIBinder] public class GameUIHintsPanel : UIBinder
+    [UIBinder] public class GameUIConsole : UIBinder
     {
-        private const string HINTS_LABEL_NAME = "HintsLabel";
+        private Label _commandLabel;
         
         public override void OnAdd()
         {
-            var info = Element.Info;
-            var labelText = info?.Parameters[0].ToString();
-            labelText ??= "NO HINTS FOUND";
-            
-            var label = Element.ElementInstance.Q<Label>(HINTS_LABEL_NAME);
-            label.text = labelText;
-            
             var root = G.Resolve<UI>().GetRoot();
+            _commandLabel = Element.ElementInstance.Q<Label>("CommandLabel");
+            
             root.Add(Element.ElementInstance);
+            G.Resolve<Console>().Command.Subscribe((value, _) => OnCommandChanged(value));
         }
+
+        private void OnCommandChanged(string command) { _commandLabel.text = command; }
         
         public override void OnRemove()
         {

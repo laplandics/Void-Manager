@@ -25,14 +25,11 @@ namespace EntitySystems
 
         private static void MoveCamera(Vector3 position)
         {
-            var camera = G.Resolve<GameCamera>().GetCamera();
-            
-            if (camera == null) return;
-            var cameraObject = camera.gameObject;
-            var currentPosition = cameraObject.transform.position;
-            
+            var currentPosition = G.Resolve<GameCamera>().GetCameraPosition();
             var gridPosition = Grid.Snap(position);
-            cameraObject.transform.position = new Vector3(gridPosition.x, gridPosition.y, currentPosition.z);
+            
+            var newPosition = new Vector3(gridPosition.x, gridPosition.y, currentPosition.z);
+            G.Resolve<GameCamera>().MoveCamera(newPosition);
         }
         
         public override void UnregisterEntity(Entity entity)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Data
 {
@@ -7,6 +8,6 @@ namespace Data
     {
         public string id;
         public string type;
-        public string[] components;
+        public List<ComponentData> components;
     }
 }

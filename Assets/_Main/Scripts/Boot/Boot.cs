@@ -14,11 +14,12 @@ namespace Boot
         private Boot()
         {
             G.Register(new UI());
-            G.Register(new Cells());
             G.Register(new Scenes());
             G.Register(new Inputs());
             G.Register(new States());
+            G.Register(new TileMap());
             G.Register(new Systems());
+            G.Register(new Console());
             G.Register(new Entities());
             G.Register(new Coroutines());
             G.Register(new GameCamera());
@@ -54,7 +55,6 @@ namespace Boot
             }
             
             G.Resolve<Inputs>().Activate();
-            G.Resolve<States>().Activate();
             G.Resolve<Systems>().Activate();
             yield return null;
             

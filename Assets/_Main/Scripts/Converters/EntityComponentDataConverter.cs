@@ -1,154 +1,87 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using Constants;
 using Content.WorldSpace;
+using Data;
 using UnityEngine;
 
 namespace Converters
 {
     public static class EntityComponentDataConverter
     {
-        public static EntityComponent FromEntry(string dataEntry)
+        public static EntityComponent FromData(ComponentData data)
         {
-            var split = dataEntry.Split(Separators.ENTITY_COMPONENT_DATA_SEPARATOR);
-            var type = split[0];
-            var tag = split[1];
-            var value = split[2];
-            
-            EntityComponent data = type switch
+            EntityComponent component = data.type switch
             {
                 nameof(EntityComponentEmpty) => new EntityComponentEmpty
-                    { tag = tag },
+                { tag = data.tag },
                 
                 nameof(EntityComponentInt) => new EntityComponentInt
-                    { tag = tag, stream = new Reactive<int>(int.Parse(value)) },
+                { tag = data.tag, stream = new Reactive<int>(int.Parse(data.value)) },
                 
                 nameof(EntityComponentFloat) => new EntityComponentFloat
-                    { tag = tag, stream = new Reactive<float>(float.Parse(value, CultureInfo.InvariantCulture)) },
+                { tag = data.tag, stream = new Reactive<float>(float.Parse(data.value, CultureInfo.InvariantCulture)) },
                 
                 nameof(EntityComponentBool) => new EntityComponentBool
-                    { tag = tag, stream = new Reactive<bool>(bool.Parse(value)) },
+                { tag = data.tag, stream = new Reactive<bool>(bool.Parse(data.value)) },
                 
                 nameof(EntityComponentString) => new EntityComponentString
-                    { tag = tag, stream = new Reactive<string>(value) },
+                { tag = data.tag, stream = new Reactive<string>(data.value) },
                 
                 nameof(EntityComponentVector2) => new EntityComponentVector2
-                    { tag = tag, stream = new Reactive<Vector2>(EntityComponentVectorValueParser.GetVector2(value)) },
+                { tag = data.tag, stream = new Reactive<Vector2>(EntityComponentVectorValueParser.GetVector2(data.value)) },
                 
                 nameof(EntityComponentVector3) => new EntityComponentVector3
-                    { tag = tag, stream = new Reactive<Vector3>(EntityComponentVectorValueParser.GetVector3(value)) },
+                { tag = data.tag, stream = new Reactive<Vector3>(EntityComponentVectorValueParser.GetVector3(data.value)) },
                 
                 nameof(EntityComponentColor) => new EntityComponentColor
-                    { tag = tag, stream = new Reactive<Color>(EntityComponentColorValueParser.GetColor(value)) },
+                { tag = data.tag, stream = new Reactive<Color>(EntityComponentColorValueParser.GetColor(data.value)) },
                 
                 nameof(EntityComponentStringList) => new EntityComponentStringList
-                    { tag = tag, stream = new ReactiveList<string>(EntityComponentListValueParser.GetList(value)) },
+                { tag = data.tag, stream = new ReactiveList<string>(EntityComponentListValueParser.GetList(data.value)) },
                 
                 _ => throw new Exception("Failed to parse entity component data entry")
             };
             
-            return data;
+            return component;
         }
         
-        public static string ToEntry(EntityComponent baseData)
+        public static ComponentData ToData(EntityComponent component)
         {
-            var entry = baseData switch
+            var data = component switch
             {
-                EntityComponentEmpty emptyData => 
-                    MakeString(nameof(EntityComponentEmpty), emptyData.tag),
+                EntityComponentEmpty emptyData => MakeData(nameof(EntityComponentEmpty), emptyData.tag, string.Empty),
                 
-                EntityComponentInt intData =>
-                    MakeString(nameof(EntityComponentInt), intData.tag, intData.stream.Value),
+                EntityComponentInt intData => MakeData(nameof(EntityComponentInt), intData.tag,
+                    intData.stream.Value.ToString()),
                 
-                EntityComponentFloat floatData =>
-                    MakeString(nameof(EntityComponentFloat), floatData.tag, floatData.stream.Value),
+                EntityComponentFloat floatData => MakeData(nameof(EntityComponentFloat), floatData.tag,
+                    floatData.stream.Value.ToString(CultureInfo.InvariantCulture)),
                 
-                EntityComponentBool boolData =>
-                    MakeString(nameof(EntityComponentBool), boolData.tag, boolData.stream.Value),
+                EntityComponentBool boolData => MakeData(nameof(EntityComponentBool), boolData.tag,
+                    boolData.stream.Value.ToString()),
                 
-                EntityComponentString stringData =>
-                    MakeString(nameof(EntityComponentString), stringData.tag, stringData.stream.Value),
+                EntityComponentString stringData => MakeData(nameof(EntityComponentString), stringData.tag,
+                    stringData.stream.Value),
                 
-                EntityComponentVector2 vector2Data =>
-                    MakeString(nameof(EntityComponentVector2), vector2Data.tag, vector2Data.stream.Value),
+                EntityComponentVector2 vector2Data => MakeData(nameof(EntityComponentVector2), vector2Data.tag,
+                    EntityComponentVectorValueParser.GetString(vector2Data.stream.Value)),
                 
-                EntityComponentVector3 vector3Data =>
-                    MakeString(nameof(EntityComponentVector3), vector3Data.tag, vector3Data.stream.Value),
+                EntityComponentVector3 vector3Data => MakeData(nameof(EntityComponentVector3), vector3Data.tag,
+                    EntityComponentVectorValueParser.GetString(vector3Data.stream.Value)),
                 
-                EntityComponentColor colorData => 
-                    MakeString(nameof(EntityComponentColor), colorData.tag, colorData.stream.Value),
+                EntityComponentColor colorData => MakeData(nameof(EntityComponentColor), colorData.tag,
+                    EntityComponentColorValueParser.GetString(colorData.stream.Value)),
                 
-                EntityComponentStringList stringArrayData =>
-                    MakeString(nameof(EntityComponentStringList), stringArrayData.tag, stringArrayData.stream.Value),
+                EntityComponentStringList stringArrayData => MakeData(nameof(EntityComponentStringList),
+                    stringArrayData.tag, EntityComponentListValueParser.GetString(stringArrayData.stream.Value)),
                     
-                _ => string.Empty
+                _ => new ComponentData()
             };
             
-            return entry;
+            return data;
         }
 
-        private static string MakeString(string type, string tag)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   string.Empty;
-        }
-        
-        private static string MakeString(string type, string tag, int value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{value.ToString()}";
-        }
-        
-        private static string MakeString(string type, string tag, float value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{value.ToString(CultureInfo.InvariantCulture)}";
-        }
-        
-        private static string MakeString(string type, string tag, bool value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{value.ToString()}";
-        }
-        
-        private static string MakeString(string type, string tag, string value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{value}";
-        }
-        
-        private static string MakeString(string type, string tag, Vector2 value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   EntityComponentVectorValueParser.GetString(value);
-        }
-        
-        private static string MakeString(string type, string tag, Vector3 value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   EntityComponentVectorValueParser.GetString(value);
-        }
-        
-        private static string MakeString(string type, string tag, Color value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   EntityComponentColorValueParser.GetString(value);
-        }
-        
-        private static string MakeString(string type, string tag, IEnumerable<string> value)
-        {
-            return $"{type}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   $"{tag}{Separators.ENTITY_COMPONENT_DATA_SEPARATOR}" +
-                   EntityComponentListValueParser.GetString(value);
-        }
+        private static ComponentData MakeData(string type, string tag, string value) => new()
+            { type = type, tag = tag, value = value };
     }
 }
